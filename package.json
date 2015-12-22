@@ -1,0 +1,42 @@
+{
+  "name": "Pluralsight-Gulp",
+  "version": "0.1.0",
+  "description": "Starter Code for Gulp.js",
+  "authors": [
+    "Prasanna kapate"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/prasannakapate/gulp-master.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/prasannakapate/gulp-master.git"
+  },
+  "scripts": {
+    "init": "npm install",
+    "install": "bower install",
+    "start": "node src/server/app.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.8.2",
+    "compression": "^1.1.0",
+    "cors": "^2.2.0",
+    "express": "^4.9.3",
+    "morgan": "^1.1.1",
+    "serve-favicon": "^2.0.1"
+  },
+  "devDependencies": {
+    "del": "^1.2.0",
+    "gulp": "^3.9.0",
+    "gulp-autoprefixer": "^2.3.1",
+    "gulp-if": "^1.2.5",
+    "gulp-jscs": "^1.6.0",
+    "gulp-jshint": "^1.11.0",
+    "gulp-less": "^3.0.3",
+    "gulp-load-plugins": "^0.10.0",
+    "gulp-plumber": "^1.0.1",
+    "gulp-print": "^1.1.0",
+    "gulp-util": "^3.0.5",
+    "jshint-stylish": "^2.0.0",
+    "yargs": "^3.10.0"
+  }
+}
