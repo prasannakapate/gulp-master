@@ -8,16 +8,16 @@ var gulp = require('gulp'),
 
 gulp.task('vet', function() {
     log('Analyzing source with JSHint and JSCS');
+
     return gulp
         .src(config.alljs)
         .pipe($.if(args.verbose, $.print()))
-        .pipe($.jscs())
         .pipe($.jshint())
-        .pipe($.jshint.reporter('jshint-stylish', {
-            verbose: true
-        }))
-        .pipe($.jshint.reporter('fail'));
+        .pipe($.jshint.reporter('jshint-stylish', {verbose: true}))
+        .pipe($.jshint.reporter('fail'))
+        .pipe($.jscs());
 });
+
 
 gulp.task('styles', ['clean-styles'], function() {
     log('compiling Less --> CSS');

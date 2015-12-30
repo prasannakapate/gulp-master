@@ -1,7 +1,7 @@
 {
-  "name": "Pluralsight-Gulp",
+  "name": "gulp-master",
   "version": "0.1.0",
-  "description": "Starter Code for Gulp.js",
+  "description": "Gulp js patterns for the smarter web development",
   "authors": [
     "Prasanna kapate"
   ],
@@ -37,6 +37,7 @@
     "gulp-print": "^1.1.0",
     "gulp-util": "^3.0.5",
     "jshint-stylish": "^2.0.0",
+    "node-sass": "^3.4.2",
     "yargs": "^3.10.0"
   }
 }
