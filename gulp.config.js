@@ -29,14 +29,46 @@ module.exports = function() {
         less: client + 'styles/styles.less',
         build: './build/',
         client: client,
-        server: server,
-        temp: temp,
         css: temp + 'styles.css',
         fonts: bower.directory + 'font-awesome/fonts/**/*.*',
         html: client + '**/*.html',
         htmltemplates: clientApp + '**/*.html',
         images: client + 'images/**/*.*',
         index: client + 'index.html',
+        server: server,
+        temp: temp,
+        /**
+         * optimized files
+         */
+        optimized: {
+            app: 'app.js',
+            lib: 'lib.js'
+        },
+
+        /**
+         * plato
+         */
+        plato: {
+            js: clientApp + '**/*.js'
+        },
+
+        /**
+         * browser sync
+         */
+        browserReloadDelay: 1000,
+
+        /**
+         * template cache
+         */
+        templateCache: {
+            file: 'templates.js',
+            options: {
+                module: 'app.core',
+                root: 'app/',
+                standAlone: false
+            }
+        },
+
         bower: {
             json: require('./bower.json'),
             directory: './bower_components/',
@@ -53,8 +85,7 @@ module.exports = function() {
          * Node settings
          */
         nodeServer: './src/server/app.js',
-        defaultPort: '7203',
-        browserReloadDelay: 1000
+        defaultPort: '7203'
     };
 
     config.getWiredepDefaultOptions = function() {

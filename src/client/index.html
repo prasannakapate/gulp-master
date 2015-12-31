@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html ng-app="app">
-
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
@@ -8,31 +7,32 @@
     <title ng-bind="title"></title>
     <base href="/">
     <style>
-    /* This helps the ng-show/ng-hide animations start at the right place. */
-    /* Since Angular has this but needs to load, this gives us the class early. */
-    
-    .ng-hide {
-        display: none!important;
-    }
+        /* This helps the ng-show/ng-hide animations start at the right place. */
+        /* Since Angular has this but needs to load, this gives us the class early. */
+        .ng-hide { display: none!important; }
     </style>
+
+    <!-- build:css styles/lib.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.css" />
     <link rel="stylesheet" href="/bower_components/toastr/toastr.css" />
     <!-- endbower -->
-    
+    <!-- endbuild -->
+
+    <!-- build:css styles/app.css-->
     <!-- inject:css -->
     <link rel="stylesheet" href="/.temp/styles.css">
     <!-- endinject -->
+    <!-- endbuild -->
 </head>
-
 <body>
     <div>
         <div ng-include="'app/layout/shell.html'"></div>
         <div id="splash-page" ng-show="false">
             <div class="page-splash">
                 <div class="page-splash-message">
-                    Gulp
+                    Gulp Patterns Demo
                 </div>
                 <div class="progress progress-striped active page-progress-bar">
                     <div class="bar"></div>
@@ -40,6 +40,8 @@
             </div>
         </div>
     </div>
+
+    <!-- build:js js/lib.js -->
     <!-- bower:js -->
     <script src="/bower_components/jquery/dist/jquery.js"></script>
     <script src="/bower_components/angular/angular.js"></script>
@@ -51,6 +53,9 @@
     <script src="/bower_components/angular-animate/angular-animate.js"></script>
     <script src="/bower_components/angular-resource/angular-resource.js"></script>
     <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:js js/app.js-->
     <!-- inject:js -->
     <script src="/src/client/app/app.module.js"></script>
     <script src="/src/client/app/core/core.module.js"></script>
@@ -80,6 +85,10 @@
     <script src="/src/client/app/blocks/logger/logger.js"></script>
     <script src="/src/client/app/blocks/router/router-helper.provider.js"></script>
     <!-- endinject -->
-</body>
 
+    <!-- inject:templates:js -->
+    <!-- endinject -->
+
+    <!-- endbuild -->
+</body>
 </html>
