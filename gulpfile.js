@@ -32,7 +32,9 @@ gulp.task('styles', ['clean-styles'], function() {
         .pipe($.plumber()) // exit gracefully if something fails after this
         .pipe($.less())
         //.on('error', errorLogger) // more verbose and dupe output. requires emit.
-        .pipe($.autoprefixer({browsers: ['last 2 version', '> 5%']}))
+        .pipe($.autoprefixer({
+            browsers: ['last 2 version', '> 5%']
+        }))
         .pipe(gulp.dest(config.temp));
 });
 
@@ -64,6 +66,16 @@ gulp.task('wiredep', function() {
         .src(config.index)
         .pipe(wiredep(options))
         .pipe($.inject(gulp.src(config.js)))
+        .pipe(gulp.dest(config.client));
+});
+
+
+gulp.task('inject', ['wiredep', 'styles'], function() {
+    log('Wire up css into the html, after files are ready');
+
+    return gulp
+        .src(config.index)
+        .pipe($.inject(gulp.src(config.css)))
         .pipe(gulp.dest(config.client));
 });
 
