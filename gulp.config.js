@@ -18,7 +18,7 @@ module.exports = function() {
     var nodeModules = 'node_modules';
 
     var config = {
-        temp: temp,
+
         /**
          * File paths
          */
@@ -29,6 +29,8 @@ module.exports = function() {
         less: client + 'styles/styles.less',
         build: './build/',
         client: client,
+        server: server,
+        temp: temp,
         css: temp + 'styles.css',
         fonts: bower.directory + 'font-awesome/fonts/**/*.*',
         html: client + '**/*.html',
@@ -45,7 +47,14 @@ module.exports = function() {
             clientApp + '**/*.module.js',
             clientApp + '**/*.js',
             '!' + clientApp + '**/*.spec.js'
-        ]
+        ],
+
+        /**
+         * Node settings
+         */
+        nodeServer: './src/server/app.js',
+        defaultPort: '7203',
+        browserReloadDelay: 1000
     };
 
     config.getWiredepDefaultOptions = function() {
