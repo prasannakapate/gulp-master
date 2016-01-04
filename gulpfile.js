@@ -114,7 +114,6 @@ gulp.task('templatecache', function() {
 
 gulp.task('wiredep', function() {
     log('Wiring the bower dependencies into the html');
-
     var wiredep = require('wiredep').stream;
     var options = config.getWiredepDefaultOptions();
     // Only include stubs if flag is enabled
@@ -139,7 +138,8 @@ gulp.task('inject', ['wiredep', 'styles', 'templatecache'], function() {
 gulp.task('optimize', ['inject'], function() {
     log('Optimizing the js, css, and html');
     // // Filters are named for the gulp-useref path
-    // var cssFilter = $.filter('**/*.css');
+    var cssFilter = $.filter('**/*.css');
+    var jsFilter = $.filter('**/*.js');
     // var jsAppFilter = $.filter('**/' + config.optimized.app);
     // var jslibFilter = $.filter('**/' + config.optimized.lib);
 
@@ -156,6 +156,8 @@ gulp.task('optimize', ['inject'], function() {
         }), {
             starttag: '<!-- inject:templates:js -->'
         }))
+        .pipe(cssFilter)
+        .pipe($.csso())
         .pipe($.useref())
         .pipe(gulp.dest(config.build));
 });

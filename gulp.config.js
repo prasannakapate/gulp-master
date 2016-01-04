@@ -36,7 +36,7 @@ module.exports = function() {
         images: client + 'images/**/*.*',
         index: client + 'index.html',
         server: server,
-        temp: temp,
+        temp: './.temp/',
         /**
          * optimized files
          */
@@ -80,7 +80,11 @@ module.exports = function() {
             clientApp + '**/*.js',
             '!' + clientApp + '**/*.spec.js'
         ],
-
+        jsOrder: [
+            '**/app.module.js',
+            '**/*.module.js',
+            '**/*.js'
+        ],
         /**
          * Node settings
          */
