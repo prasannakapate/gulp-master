@@ -138,10 +138,19 @@ gulp.task('inject', ['wiredep', 'styles', 'templatecache'], function() {
 gulp.task('optimize', ['inject'], function() {
     log('Optimizing the js, css, and html');
     // // Filters are named for the gulp-useref path
-    var cssFilter = $.filter('**/*.css');
-    var jsFilter = $.filter('**/*.js');
-    // var jsAppFilter = $.filter('**/' + config.optimized.app);
-    // var jslibFilter = $.filter('**/' + config.optimized.lib);
+    var cssFilter = $.filter('**/*.css', {
+        restore: true
+    });
+    var jsAppFilter = $.filter('**/' + config.optimized.app, {
+        restore: true
+    });
+    var jslibFilter = $.filter('**/' + config.optimized.lib, {
+        restore: true
+    });
+    var notIndexFilter = $.filter('!**/' + config.index, {
+        restore: true
+    });
+
 
     var templateCache = config.temp + config.templateCache.file;
 
@@ -156,9 +165,23 @@ gulp.task('optimize', ['inject'], function() {
         }), {
             starttag: '<!-- inject:templates:js -->'
         }))
+
         .pipe(cssFilter)
         .pipe($.csso())
-        .pipe($.useref())
+        .pipe(cssFilter.restore)
+        .pipe(jslibFilter)
+        .pipe($.uglify())
+        .pipe(jslibFilter.restore)
+        .pipe(jsAppFilter)
+        .pipe($.ngAnnotate({
+            add: true
+        }))
+        .pipe($.uglify())
+        .pipe(jsAppFilter.restore)
+        //.pipe(notIndexFilter)
+        .pipe($.rev())
+        //.pipe(notIndexFilter.restore)
+        .pipe($.revReplace())
         .pipe(gulp.dest(config.build));
 });
 
