@@ -193,6 +193,10 @@ gulp.task('serve-dev', ['inject'], function() {
     serve(true /* isDev */ );
 });
 
+gulp.task('test', ['vet', 'templatecache'], function(done) {
+    startTests(true /*singleRun*/ , done);
+});
+
 ///////////
 
 function serve(isDev) {
