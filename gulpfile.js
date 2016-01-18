@@ -2,6 +2,8 @@ var gulp = require('gulp'),
     args = require('yargs').argv,
     config = require('./gulp.config')(),
     del = require('del'),
+    path = require('path'),
+    _ = require('lodash'),
     browserSync = require('browser-sync'),
     $ = require('gulp-load-plugins')({
         lazy: true
@@ -135,7 +137,64 @@ gulp.task('inject', ['wiredep', 'styles', 'templatecache'], function() {
         .pipe(gulp.dest(config.client));
 });
 
-gulp.task('optimize', ['inject'], function() {
+gulp.task('build', ['optimize', 'fonts', 'images', ], function() {
+    log('Building everything');
+    var msg = {
+        title: 'gulp build',
+        subtitle: 'Deployed to the build folder',
+        message: 'Running gulp serve-build '
+    };
+    clean(config.temp)
+    log(msg);
+    notify(msg);
+});
+
+
+gulp.task('serve-specs', ['build-specs'], function(done) {
+    log('run the spec runner');
+    serve(true /* isDev */ , true /* specRunner */ );
+    done();
+});
+
+
+gulp.task('build-specs', ['templatecache'], function(done) {
+    log('building the spec runner');
+
+    var wiredep = require('wiredep').stream;
+    var templateCache = config.temp + config.templateCache.file;
+    var options = config.getWiredepDefaultOptions();
+    var specs = config.specs;
+    options.devDependencies = true;
+
+    if (args.startServers) {
+        specs = [].concat(specs, config.serverIntegrationSpecs);
+    }
+    
+    return gulp
+        .src(config.specRunner)
+        .pipe(wiredep(options))
+        .pipe($.inject(gulp.src(config.testlibraries), {
+            name: 'inject:testlibraries',
+            read: false
+        }))
+        .pipe($.inject(gulp.src(config.js)))
+        .pipe($.inject(gulp.src(config.specHelpers), {
+            name: 'inject:spechelpers',
+            read: false
+        }))
+        .pipe($.inject(gulp.src(specs), {
+            name: 'inject:specs',
+            read: false
+        }))
+        .pipe($.inject(gulp.src(templateCache), {
+            name: 'inject:templates',
+            read: false
+        }))
+        .pipe(gulp.dest(config.client));
+});
+
+
+gulp.task('optimize', ['inject', 'test'], function() {
     log('Optimizing the js, css, and html');
     // // Filters are named for the gulp-useref path
     var cssFilter = $.filter('**/*.css', {
@@ -166,7 +225,7 @@ gulp.task('optimize', ['inject'], function() {
             starttag: '<!-- inject:templates:js -->'
         }))
 
-        .pipe(cssFilter)
+    .pipe(cssFilter)
         .pipe($.csso())
         .pipe(cssFilter.restore)
         .pipe(jslibFilter)
@@ -179,13 +238,13 @@ gulp.task('optimize', ['inject'], function() {
         .pipe($.uglify())
         .pipe(jsAppFilter.restore)
         //.pipe(notIndexFilter)
-        .pipe($.rev())
+        //.pipe($.rev())
         //.pipe(notIndexFilter.restore)
-        .pipe($.revReplace())
+        //.pipe($.revReplace())
         .pipe(gulp.dest(config.build));
 });
 
-gulp.task('serve-build', ['optimize'], function() {
+gulp.task('serve-build', ['build'], function() {
     serve(false /* isDev */ );
 });
 
@@ -197,10 +256,13 @@ gulp.task('test', ['vet', 'templatecache'], function(done) {
     startTests(true /*singleRun*/ , done);
 });
 
+gulp.task('autotest', ['vet', 'templatecache'], function(done) {
+    startTests(false /*singleRun*/ , done);
+});
 
 ///////////
 
-function serve(isDev) {
+function serve(isDev, specRunner) {
     var nodeOptions = {
         script: config.nodeServer,
         delayTime: 1,
@@ -223,7 +285,7 @@ function serve(isDev) {
         })
         .on('start', function() {
             log('**** nodemon started');
-            startBrowserSync(isDev);
+            startBrowserSync(isDev, specRunner);
         })
         .on('crash', function() {
             log('**** nodemon crashed: script crashed for some reason');
@@ -262,7 +324,22 @@ function changeEvent(event) {
     log('File ' + event.path.replace(srcPattern, '') + ' ' + event.type);
 }
 
-function startBrowserSync(isDev) {
+
+/**
+ * Show OS level notification using node-notifier
+ */
+function notify(options) {
+    var notifier = require('node-notifier');
+    var notifyOptions = {
+        sound: 'Bottle',
+        contentImage: path.join(__dirname, 'gulp.png'),
+        icon: path.join(__dirname, 'gulp.png')
+    };
+    _.assign(notifyOptions, options);
+    notifier.notify(notifyOptions);
+}
+
+function startBrowserSync(isDev, specRunner) {
     if (args.nosync || browserSync.active) {
         return;
     }
@@ -302,13 +379,17 @@ function startBrowserSync(isDev) {
         reloadDelay: 0 //1000
     };
 
+    if (specRunner) {
+        options.startPath = config.specRunnerFile;
+    }
+
     browserSync(options);
 }
 
 function startTests(singleRun, done) {
     var child;
-    var excludeFiles = [];
     var fork = require('child_process').fork;
+    var excludeFiles = [];
     var karma = require('karma').server;
     var serverSpecs = config.serverIntegrationSpecs;
 

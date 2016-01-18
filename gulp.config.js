@@ -86,6 +86,30 @@ module.exports = function() {
             '**/*.module.js',
             '**/*.js'
         ],
+        /**
+         * Bower and NPM files
+         */
+        packages: [
+            './package.json',
+            './bower.json'
+        ],
+        /**
+         * specs.html, our HTML spec runner
+         */
+        specRunnerFile: specRunnerFile,
+        specRunner: client + specRunnerFile,
+        
+
+        /**
+         * The sequence of the injections into specs.html:
+         *  1 testlibraries
+         *      mocha setup
+         *  2 bower
+         *  3 js
+         *  4 spechelpers
+         *  5 specs
+         *  6 templates
+         */
 
         /**
          * Karma and testing settings
