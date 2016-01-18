@@ -9,3 +9,4 @@ $ bower install
 $ npm start
 ```
 
+npm install --save-dev karma karma-chai karma-chai-sinon karma-chrome-launcher karma-coverage karma-growl-reporter karma-mocha karma-phantomjs-launcher karma-siono mocha mocha-clean sinon-chai sinon phantomjs
